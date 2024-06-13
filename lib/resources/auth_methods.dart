@@ -8,7 +8,6 @@ import 'package:instagram_flutter/resources/storage_methods.dart';
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
 
   //sign up function
   Future<String> signUpUser({
@@ -18,7 +17,7 @@ class AuthMethods {
     required String bio,
     required Uint8List file,
   }) async {
-    String res = "Some error occurred authmethods";
+    String res = "Some error occurred with sign up";
     try{ 
       if(email.isNotEmpty || password.isNotEmpty || username.isNotEmpty ||bio.isNotEmpty) {
         //resister user
@@ -73,7 +72,8 @@ class AuthMethods {
     required String email,
     required String password,
   }) async {
-    String res = "Some error occurred";
+
+    String res = "Some error occurred with login";
 
     try{
       if(email.isNotEmpty || password.isNotEmpty) {
@@ -82,8 +82,24 @@ class AuthMethods {
       } else {
         res = "Please fill in required fields";
       }
-    }catch(err) {
+    } 
+    //specific error messages
+    on FirebaseAuthException catch(e) {
+      if(e.code == 'user-not-found') {
+        res = 'User not found';
+      } else if(e.code == 'wrong-password') {
+        res = 'Invalid password';
+      }
+      else if(e.code == 'too-many-requests') {
+        res = 'This account has been temporarily locked due to too many login attempts';
+      }
+      else if(e.code == 'invalid-credential') {
+        res = 'Incorrect password';
+    }
+    } 
+    catch(err) {
       res = err.toString();
+      print(res);
     }
 
     return res;

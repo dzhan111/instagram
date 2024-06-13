@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -23,14 +24,21 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
   }
 
-  void loginUser() async  {
-    String res = await AuthMethods().loginUser(email: _emailController.text, password: _passwordController.text);
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
 
-    if(res == "success") {
-      print("successful login");
-    }else {
+    if(res != 'success') {
       showSnackBar(res, context);
     }
+
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -71,7 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
             InkWell(
               onTap: loginUser,
               child: Container(
-                child: const Text("Log in"),
+                child: _isLoading
+                    ? const Center(
+                      child: CircularProgressIndicator())
+                    : const Text("Log in"),
                 width: double.infinity,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -97,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: const Text("Don't have an Account? "),
                 ),
                 GestureDetector(
-                  onTap: () {}, 
+                  onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: const Text(
