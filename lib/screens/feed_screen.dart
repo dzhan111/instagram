@@ -35,9 +35,12 @@ class FeedScreen extends StatelessWidget {
             }
 
             return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
+              
+              itemCount: snapshot.data != null ? snapshot.data!.docs.length : 0,
+              // og was !
+              //added the ternary operator, not in original code
               itemBuilder: (context, index) => PostCard(
-                snap: snapshot.data!.docs[index].data(),
+                snap: snapshot.data!.docs[index].data(), // original had !
               ),
             );
           },
