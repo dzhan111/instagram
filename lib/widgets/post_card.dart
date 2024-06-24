@@ -96,7 +96,7 @@ class _PostCardState extends State<PostCard> {
                                               await FirestoreMethods()
                                                   .deletePost(
                                                       widget.snap['postId']);
-                                              Navigator.of(context).pop(); 
+                                              Navigator.of(context).pop();
                                             },
                                             child: Container(
                                               padding:
@@ -252,11 +252,19 @@ class _PostCardState extends State<PostCard> {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      'View all ${commentLen} comments',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: secondaryColor,
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CommentsScreen(snap: widget.snap),
+                        ),
+                      ),
+                      child: Text(
+                        'View all ${commentLen} comments',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: secondaryColor,
+                        ),
                       ),
                     ),
                   ),
